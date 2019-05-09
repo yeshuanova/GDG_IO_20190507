@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Cheng-Shiang Li">
+  <title>Firebase Function 應用範例</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://revealjs.com/css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://revealjs.com/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="sunblind.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://revealjs.com/css/print/pdf.css' : 'https://revealjs.com/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://revealjs.com/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Firebase Function 應用範例</h1>
+  <p class="author">Cheng-Shiang Li</p>
+  <p class="date">May 7 2019</p>
+</section>
+
+<section><section id="about-me" class="title-slide slide level1"><h1>About Me</h1></section><section id="softwaredata-engineer" class="slide level2">
+<h2>Software/Data Engineer</h2>
+<ul>
+<li><a href="http://blog.yeshuanova.com">Blog</a>: http://blog.yeshuanova.com</li>
+<li><a href="https://github.com/yeshuanova">GitHub</a>: https://github.com/yeshuanova</li>
+</ul>
+</section></section>
+<section><section id="overview" class="title-slide slide level1"><h1>Overview</h1></section><section class="slide level2">
+
+<p>介紹 Firebase Function 的功能，並且展示使用上傳圖片到 Storage 後進行影像縮圖，呼叫 Vision API，以及將資料寫入 Firebase Database 與 Storage 等的範例。</p>
+</section><section id="components" class="slide level2">
+<h2>Components</h2>
+<ul>
+<li>Firebase Storage
+<ul>
+<li>儲存上傳的原始圖片，縮圖。</li>
+</ul></li>
+<li>Firebase Database
+<ul>
+<li>紀錄每個 Post 與 Photo 的資料，包含上傳時間，儲存位置，偵測結果等。</li>
+</ul></li>
+<li>Firebase Function
+<ul>
+<li>上傳圖片後觸發動作處理圖片，呼叫 Vision API 取得圖片 Label，以及儲存索引到 Database 中。</li>
+</ul></li>
+</ul>
+</section><section class="slide level2">
+
+<ul>
+<li>Google Vision API
+<ul>
+<li>自動對圖片進行 Labeling</li>
+</ul></li>
+<li>Android App (Flutter)
+<ul>
+<li>顯示上傳的圖片縮圖與最有可能的 Label。</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="cloud-function-for-firebase" class="title-slide slide level1"><h1>Cloud Function for Firebase</h1></section><section class="slide level2">
+
+<ul>
+<li>以 Google Cloud Function 為後台。</li>
+<li>Serverless API 服務，可直接執行後端程式碼，節省自行建立後台的時間。</li>
+<li>可透過 Http, Firebase Database/Storage 與 Google Pub/Sub 來觸發執行。</li>
+<li>支援 node.js (Javascript/Typescript), Python 與 Go 等程式語言。</li>
+</ul>
+</section><section class="slide level2">
+
+<figure>
+<img data-src="https://firebase.google.com/docs/functions/images/sanitization.png" alt="Database Trigger" /><figcaption>Database Trigger</figcaption>
+</figure>
+</section><section id="steps" class="slide level2">
+<h2>Steps</h2>
+<ol type="1">
+<li>建立 Firebase Project</li>
+</ol>
+<p><a href="https://console.firebase.google.com/" class="uri">https://console.firebase.google.com/</a></p>
+<ol start="2" type="1">
+<li>安裝 Firebase SDK</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">npm</span> install -g firebase-tools</a></code></pre></div>
+<ol start="3" type="1">
+<li>登入 Firebase 帳號</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">firebase</span> login</a></code></pre></div>
+</section><section class="slide level2">
+
+<ol start="4" type="1">
+<li>建立專案資料夾並執行</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">firebase</span> init functions</a></code></pre></div>
+<p>執行後可選擇專案與以及使用 Javascript 或 Typescript 執行。</p>
+<blockquote>
+<p>若要使用 Node.js 8 來執行 Cloud Function 需在 <code>functions/package.json</code> 的檔案中加入 <code>&quot;engines&quot;: {&quot;node&quot;: &quot;8&quot;}</code> 設定。(現在應該為預設)。</p>
+</blockquote>
+</section><section class="slide level2">
+
+<ol start="5" type="1">
+<li>建立 Functions 內容</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">// Required modules and initialize app</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">const</span> functions <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;firebase-functions&#39;</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">const</span> admin <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;firebase-admin&#39;</span>)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="va">admin</span>.<span class="at">initializeApp</span>(<span class="va">functions</span>.<span class="at">config</span>().<span class="at">firebase</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="va">exports</span>.<span class="at">helloHttp</span> <span class="op">=</span> <span class="va">functions</span>.<span class="va">https</span>.<span class="at">onRequest</span>(<span class="at">async</span> (req<span class="op">,</span> res) <span class="op">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">  <span class="va">res</span>.<span class="at">send</span>(<span class="vs">`Hello World!`</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="op">}</span>)<span class="op">;</span></a></code></pre></div>
+</section><section class="slide level2">
+
+<ol start="6" type="1">
+<li>部署至 Cloud Function for Firebase</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># 只部署 helloHttp 這個 http request function</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="ex">firebase</span> deploy --only functions:helloHttp</a></code></pre></div>
+<ol start="7" type="1">
+<li>完成後可到 Firebase Console 查看是否部署成功。</li>
+</ol>
+</section><section id="function-trigger" class="slide level2">
+<h2>Function Trigger</h2>
+<ul>
+<li>Storage Trigger</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="va">exports</span>.<span class="at">upload_origin_image</span> <span class="op">=</span> <span class="va">functions</span>.<span class="va">storage</span>.<span class="at">object</span>().<span class="at">onFinalize</span>(<span class="at">async</span> (object<span class="op">,</span> context) <span class="op">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">  ...</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="op">}</span></a></code></pre></div>
+<ul>
+<li>Database Trigger</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="va">exports</span>.<span class="at">gv_label_detection</span> <span class="op">=</span> <span class="va">functions</span>.<span class="va">database</span>.<span class="at">ref</span>(<span class="st">&#39;/posts/{pushId}/actions/gv_label_detection&#39;</span>).<span class="at">onCreate</span>(<span class="at">async</span> (snapshot<span class="op">,</span> context) <span class="op">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">  ...</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="op">}</span></a></code></pre></div>
+</section></section>
+<section><section id="google-vision-api" class="title-slide slide level1"><h1>Google Vision API</h1></section><section class="slide level2">
+
+<ul>
+<li>可接受圖片上傳並執行不同的影像辨識功能。
+<ul>
+<li>Label 偵測</li>
+<li>手寫辨識</li>
+<li>臉部偵測</li>
+<li>安全搜尋</li>
+</ul></li>
+<li>使用 Label Detection 作為範例。</li>
+<li><a href="https://cloud.google.com/vision/" class="uri">https://cloud.google.com/vision/</a></li>
+</ul>
+</section><section id="step" class="slide level2">
+<h2>Step</h2>
+<ol type="1">
+<li>開啟 Google Cloud Console</li>
+<li>選擇 Firebase 專案</li>
+<li>啟用 Cloud Vision API</li>
+<li>在 Cloud Funciton 加入相關程式碼</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">const</span> vision <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;@google-cloud/vision&#39;</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">const</span> vision_client <span class="op">=</span> <span class="kw">new</span> <span class="va">vision</span>.<span class="at">ImageAnnotatorClient</span>()<span class="op">;</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="va">vision_client</span>.<span class="at">labelDetection</span>(path).<span class="at">then</span>(results <span class="op">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="op">}</span>)</a></code></pre></div>
+</section></section>
+<section><section id="android-app-flutter" class="title-slide slide level1"><h1>Android App (Flutter)</h1></section><section class="slide level2">
+
+<p>建立 Flutter App，並透過 Firebase library，將 Post 的資料，偵測結果與縮圖下載並顯示在 Flutter App 中。</p>
+</section><section id="建立開發環境" class="slide level2">
+<h2>建立開發環境</h2>
+<ol type="1">
+<li>安裝 <a href="https://www.dartlang.org/">Dart</a> 與 <a href="https://flutter.dev/">Flutter</a>。</li>
+<li>在 VSCode 中安裝 Dart 與 Flutter Plugins 並建立 Flutter Project。</li>
+<li>從 Firebase Console 下載 <code>google-service.json</code> 設定檔並放在 <code>android/app/</code> 資料夾中。</li>
+</ol>
+</section><section class="slide level2">
+
+<ol start="4" type="1">
+<li>在 <code>pubspec.yarl</code> 中加入 Firebase 元件</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="fu">dependencies:</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="fu">flutter:</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">    <span class="fu">sdk:</span><span class="at"> flutter</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">  <span class="fu">firebase_core:</span><span class="at"> ^0.3.4</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">  <span class="fu">firebase_database:</span><span class="at"> ^2.0.3</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">  <span class="fu">firebase_storage:</span><span class="at"> ^2.1.1</span></a></code></pre></div>
+<ol start="5" type="1">
+<li>在 <code>android/app/build.gradle</code> 最下層加入 Firebase 初始化設定</li>
+</ol>
+<pre class="gradle"><code>apply plugin: &#39;com.google.gms.google-services&#39;</code></pre>
+</section><section id="取得-firebase-database-資料" class="slide level2">
+<h2>取得 Firebase Database 資料</h2>
+<pre class="dart"><code>import &#39;package:firebase_database/firebase_database.dart&#39;;
+
+final _databaseRef = FirebaseDatabase.instance.reference();
+final postRef = _databaseRef.child(&#39;posts&#39;).orderByChild(&#39;update_time&#39;).limitToLast(10);
+final data = await postRef.once().then((snap) =&gt; snap.value) as Map;</code></pre>
+</section><section id="取得-firebase-storage-的-url" class="slide level2">
+<h2>取得 Firebase Storage 的 URL</h2>
+<pre class="dart"><code>import &#39;package:firebase_storage/firebase_storage.dart&#39;;
+
+final url = await _storageRef.child(&#39;photos/thumbnail/${item.thumbnailName}&#39;).getDownloadURL() as String;</code></pre>
+<blockquote>
+<p>要注意若要取得 URL 需將 Storage Rule 設定為可讀，不然會出現錯誤。</p>
+</blockquote>
+</section><section id="上傳圖片範例" class="slide level2">
+<h2>上傳圖片範例</h2>
+</section></section>
+<section><section id="link" class="title-slide slide level1"><h1>Link</h1></section><section class="slide level2">
+
+<ul>
+<li>Github - <a href="https://github.com/yeshuanova/GDG_IO_20190507">GDG_IO_20190507</a></li>
+<li>Github - <a href="https://github.com/yeshuanova/PhotoShareApp.Functions">PhotoShareApp.Functions</a></li>
+<li>Github - <a href="https://github.com/yeshuanova/PhotoShareApp.Flutter">PhotoShareApp.Flutter</a></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://revealjs.com/lib/js/head.min.js"></script>
+  <script src="https://revealjs.com/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://revealjs.com/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://revealjs.com/plugin/zoom-js/zoom.js', async: true },
+          { src: 'https://revealjs.com/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
